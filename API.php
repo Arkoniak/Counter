@@ -379,7 +379,7 @@ class API extends \Piwik\Plugin\API {
 
 				// Draw daily visitors
 				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
-				$color_daily_visitors = imagecolorallocate($src_im, $rgb_arr_visits['r'], $rgb_arr_visits['g'], $rgb_arr_visits['b']);
+				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
 				imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 10, $color_daily_visitors, $counter_params['font_path'], $daily_visitors);
 
 				# // Draw visits
