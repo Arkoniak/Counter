@@ -326,13 +326,11 @@ class API extends \Piwik\Plugin\API {
 		$counter_params = &$params['params'];
 
 		/* $request = new Request('method=VisitsSummary.get&idSite='.(int)$params['idsite'].'&period=range&date='.$date.','.date('Y-m-d').'&format=php&serialize=0&token_auth='.$counter_params['token']); */
-		$request = new Request('method=VisitsSummary.get&idSite='.(int)$params['idsite'].'&period=day&date=last1&format=php&serialize=0&token_auth='.$counter_params['token']);
-		$result = $request->process();
-
 		/* $visits = 0; */
 		/* $views = 0; */
 
-		$daily_visitors = 0;
+		$request = new Request('method=VisitsSummary.get&idSite='.(int)$params['idsite'].'&period=day&date=last1&format=php&serialize=0&token_auth='.$counter_params['token']);
+		$result = $request->process();
 
 		if (isset($result['result']) && $result['result'] == 'error') {
 			echo $result['message'];
@@ -340,6 +338,26 @@ class API extends \Piwik\Plugin\API {
 		}
 		
 		$daily_visitors = array_sum($result);
+
+		$request = new Request('method=VisitsSummary.get&idSite='.(int)$params['idsite'].'&period=day&date=last30&format=php&serialize=0&token_auth='.$counter_params['token']);
+		$result = $request->process();
+
+		if (isset($result['result']) && $result['result'] == 'error') {
+			echo $result['message'];
+			return false;
+		}
+		
+		$monthly_visitors = array_sum($result);
+
+		$request = new Request('method=VisitsSummary.get&idSite='.(int)$params['idsite'].'&period=day&date=last10000000&format=php&serialize=0&token_auth='.$counter_params['token']);
+		$result = $request->process();
+
+		if (isset($result['result']) && $result['result'] == 'error') {
+			echo $result['message'];
+			return false;
+		}
+		
+		$all_visitors = array_sum($result);
 
 		# if (isset($result['nb_visits'])) {
 		# 	$visits = $result['nb_visits'];
@@ -377,10 +395,21 @@ class API extends \Piwik\Plugin\API {
 					imagettftext($src_im, $counter_params['sitename_font_size'], 0, $counter_params['sitename_pos_x'], $counter_params['sitename_pos_y'], $color_sitename, $counter_params['font_path'], $params['title']);
 				}
 
+				// Draw total visitors
+				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
+				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
+				imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 5, $color_daily_visitors, $counter_params['font_path'], $all_visitors);
+
+				// Draw monthly visitors
+				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
+				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
+		 		imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 15, $color_daily_visitors, $counter_params['font_path'], $monthly_visitors);
+				
 				// Draw daily visitors
 				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
 				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
-				imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 10, $color_daily_visitors, $counter_params['font_path'], $daily_visitors);
+				imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 25, $color_daily_visitors, $counter_params['font_path'], $daily_visitors);
+
 
 				# // Draw visits
 				# if ($counter_params['show_visits'] == 1) {
@@ -403,10 +432,20 @@ class API extends \Piwik\Plugin\API {
 					imagestring($src_im, $counter_params['sitename_font_size']-5, $counter_params['sitename_pos_x'], $counter_params['sitename_pos_y']-10, $params['title'], imagecolorallocate($src_im, $rgb_arr_sitename['r'], $rgb_arr_sitename['g'], $rgb_arr_sitename['b']));
 				}
 
+				// Draw total visitors
+				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
+				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
+				imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 5, $color_daily_visitors, $counter_params['font_path'], $all_visitors);
+
+				// Draw monthly visitors
+				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
+				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
+		 		imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 15, $color_daily_visitors, $counter_params['font_path'], $monthly_visitors);
+				
 				// Draw daily visitors
 				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
-				$color_daily_visitors = imagecolorallocate($src_im, $rgb_arr_visits['r'], $rgb_arr_visits['g'], $rgb_arr_visits['b']);
-				imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 10, $color_daily_visitors, $counter_params['font_path'], $daily_visitors);
+				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
+				imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 25, $color_daily_visitors, $counter_params['font_path'], $daily_visitors);
 
 				# // Draw visits
 				# if ($counter_params['show_visits'] == 1) {
