@@ -325,31 +325,36 @@ class API extends \Piwik\Plugin\API {
 
 		$counter_params = &$params['params'];
 
-		$request = new Request('method=VisitsSummary.get&idSite='.(int)$params['idsite'].'&period=range&date='.$date.','.date('Y-m-d').'&format=php&serialize=0&token_auth='.$counter_params['token']);
+		/* $request = new Request('method=VisitsSummary.get&idSite='.(int)$params['idsite'].'&period=range&date='.$date.','.date('Y-m-d').'&format=php&serialize=0&token_auth='.$counter_params['token']); */
+		$request = new Request('method=VisitsSummary.get&idSite='.(int)$params['idsite'].'&period=day&date=last1&format=php&serialize=0&token_auth='.$counter_params['token']);
 		$result = $request->process();
 
-		$visits = 0;
-		$views = 0;
+		/* $visits = 0; */
+		/* $views = 0; */
+
+		$daily_visitors = 0;
 
 		if (isset($result['result']) && $result['result'] == 'error') {
 			echo $result['message'];
 			return false;
 		}
+		
+		$daily_visitors = array_sum($result);
 
-		if (isset($result['nb_visits'])) {
-			$visits = $result['nb_visits'];
-			$views = $result['nb_actions'];
-		} else {
-			$c_visits = 0;
-			$c_views = 0;
+		# if (isset($result['nb_visits'])) {
+		# 	$visits = $result['nb_visits'];
+		# 	$views = $result['nb_actions'];
+		# } else {
+		# 	$c_visits = 0;
+		# 	$c_views = 0;
 
-			foreach ($result as $value) {
-				$visits = $c_visits+$value['nb_visits'];
-				$views = $c_views+$value['nb_actions'];
-			}
-		}
+		# 	foreach ($result as $value) {
+		# 		$visits = $c_visits+$value['nb_visits'];
+		# 		$views = $c_views+$value['nb_actions'];
+		# 	}
+		# }
 
-		$data = array($visits, $views);
+		# $data = array($visits, $views);
 
 		if (!empty($counter_params['img_path']) && file_exists($counter_params['img_path'])) {
 			$mime = $this->getMime($params['params']['img_path']);
@@ -372,19 +377,24 @@ class API extends \Piwik\Plugin\API {
 					imagettftext($src_im, $counter_params['sitename_font_size'], 0, $counter_params['sitename_pos_x'], $counter_params['sitename_pos_y'], $color_sitename, $counter_params['font_path'], $params['title']);
 				}
 
-				// Draw visits
-				if ($counter_params['show_visits'] == 1) {
-					$rgb_arr_visits = $this->rgb2array($counter_params['color_visits']);
-					$color_visits = imagecolorallocate($src_im, $rgb_arr_visits['r'], $rgb_arr_visits['g'], $rgb_arr_visits['b']);
-					imagettftext($src_im, $counter_params['visits_font_size'], 0, $counter_params['visitors_pos_x'], $counter_params['visitors_pos_y'], $color_visits, $counter_params['font_path'], $data[0]);
-				}
+				// Draw daily visitors
+				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
+				$color_daily_visitors = imagecolorallocate($src_im, $rgb_arr_visits['r'], $rgb_arr_visits['g'], $rgb_arr_visits['b']);
+				imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 10, $color_daily_visitors, $counter_params['font_path'], $daily_visitors);
 
-				// Draw views
-				if ($counter_params['show_views'] == 1) {
-					$rgb_arr_views = $this->rgb2array($counter_params['color_views']);
-					$color_views = imagecolorallocate($src_im, $rgb_arr_views['r'], $rgb_arr_views['g'], $rgb_arr_views['b']);
-					imagettftext($src_im, $counter_params['hits_font_size'], 0, $counter_params['views_pos_x'], $counter_params['views_pos_y'], $color_views, $counter_params['font_path'], $data[1]);
-				}
+				# // Draw visits
+				# if ($counter_params['show_visits'] == 1) {
+				# 	$rgb_arr_visits = $this->rgb2array($counter_params['color_visits']);
+				# 	$color_visits = imagecolorallocate($src_im, $rgb_arr_visits['r'], $rgb_arr_visits['g'], $rgb_arr_visits['b']);
+				# 	imagettftext($src_im, $counter_params['visits_font_size'], 0, $counter_params['visitors_pos_x'], $counter_params['visitors_pos_y'], $color_visits, $counter_params['font_path'], $data[0]);
+				# }
+
+				# // Draw views
+				# if ($counter_params['show_views'] == 1) {
+				# 	$rgb_arr_views = $this->rgb2array($counter_params['color_views']);
+				# 	$color_views = imagecolorallocate($src_im, $rgb_arr_views['r'], $rgb_arr_views['g'], $rgb_arr_views['b']);
+				# 	imagettftext($src_im, $counter_params['hits_font_size'], 0, $counter_params['views_pos_x'], $counter_params['views_pos_y'], $color_views, $counter_params['font_path'], $data[1]);
+				# }
 			} else {
 				// Draw sitename
 				if (!empty($params['title']) && $counter_params['show_sitename'] == 1) {
@@ -393,17 +403,22 @@ class API extends \Piwik\Plugin\API {
 					imagestring($src_im, $counter_params['sitename_font_size']-5, $counter_params['sitename_pos_x'], $counter_params['sitename_pos_y']-10, $params['title'], imagecolorallocate($src_im, $rgb_arr_sitename['r'], $rgb_arr_sitename['g'], $rgb_arr_sitename['b']));
 				}
 
-				// Draw visits
-				if ($counter_params['show_visits'] == 1) {
-					$rgb_arr_visits = $this->rgb2array($counter_params['color_visits']);
-					imagestring($src_im, $counter_params['visits_font_size']-5, $counter_params['visitors_pos_x'], $counter_params['visitors_pos_y']-10, $data[0], imagecolorallocate($src_im, $rgb_arr_visits['r'], $rgb_arr_visits['g'], $rgb_arr_visits['b']));
-				}
+				// Draw daily visitors
+				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
+				$color_daily_visitors = imagecolorallocate($src_im, $rgb_arr_visits['r'], $rgb_arr_visits['g'], $rgb_arr_visits['b']);
+				imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 10, $color_daily_visitors, $counter_params['font_path'], $daily_visitors);
 
-				// Draw views
-				if ($counter_params['show_views'] == 1) {
-					$rgb_arr_views = $this->rgb2array($counter_params['color_views']);
-					imagestring($src_im, $counter_params['hits_font_size']-5, $counter_params['views_pos_x']+5, $counter_params['views_pos_y']-10, $data[1], imagecolorallocate($src_im, $rgb_arr_views['r'], $rgb_arr_views['g'], $rgb_arr_views['b']));
-				}
+				# // Draw visits
+				# if ($counter_params['show_visits'] == 1) {
+				# 	$rgb_arr_visits = $this->rgb2array($counter_params['color_visits']);
+				# 	imagestring($src_im, $counter_params['visits_font_size']-5, $counter_params['visitors_pos_x'], $counter_params['visitors_pos_y']-10, $data[0], imagecolorallocate($src_im, $rgb_arr_visits['r'], $rgb_arr_visits['g'], $rgb_arr_visits['b']));
+				# }
+
+				# // Draw views
+				# if ($counter_params['show_views'] == 1) {
+				# 	$rgb_arr_views = $this->rgb2array($counter_params['color_views']);
+				# 	imagestring($src_im, $counter_params['hits_font_size']-5, $counter_params['views_pos_x']+5, $counter_params['views_pos_y']-10, $data[1], imagecolorallocate($src_im, $rgb_arr_views['r'], $rgb_arr_views['g'], $rgb_arr_views['b']));
+				# }
 			}
 
 			imagecopyresampled($dst_im, $src_im, 0, 0, 0, 0, $counter_params['img_size_x'], $counter_params['img_size_y'], $w, $h);
