@@ -329,7 +329,7 @@ class API extends \Piwik\Plugin\API {
 		/* $visits = 0; */
 		/* $views = 0; */
 
-		$request = new Request('method=VisitsSummary.get&idSite='.(int)$params['idsite'].'&period=day&date=last1&format=php&serialize=0&token_auth='.$counter_params['token']);
+		$request = new Request('method=VisitsSummary.getUniqueVisitors&idSite='.(int)$params['idsite'].'&period=day&date=last1&format=php&serialize=0&token_auth='.$counter_params['token']);
 		$result = $request->process();
 
 		if (isset($result['result']) && $result['result'] == 'error') {
@@ -339,7 +339,7 @@ class API extends \Piwik\Plugin\API {
 		
 		$daily_visitors = array_sum($result);
 
-		$request = new Request('method=VisitsSummary.get&idSite='.(int)$params['idsite'].'&period=day&date=last2&format=php&serialize=0&token_auth='.$counter_params['token']);
+		$request = new Request('method=VisitsSummary.getUniqueVisitors&idSite='.(int)$params['idsite'].'&period=day&date=last30&format=php&serialize=0&token_auth='.$counter_params['token']);
 		$result = $request->process();
 
 		if (isset($result['result']) && $result['result'] == 'error') {
@@ -349,7 +349,7 @@ class API extends \Piwik\Plugin\API {
 		
 		$monthly_visitors = array_sum($result);
 
-		$request = new Request('method=VisitsSummary.get&idSite='.(int)$params['idsite'].'&period=day&date=last3&format=php&serialize=0&token_auth='.$counter_params['token']);
+		$request = new Request('method=VisitsSummary.getUniqueVisitors&idSite='.(int)$params['idsite'].'&period=day&date=last2000&format=php&serialize=0&token_auth='.$counter_params['token']);
 		$result = $request->process();
 
 		if (isset($result['result']) && $result['result'] == 'error') {
