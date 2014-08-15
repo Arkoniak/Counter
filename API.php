@@ -398,17 +398,17 @@ class API extends \Piwik\Plugin\API {
 				// Draw total visitors
 				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
 				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
-				imagettftext($src_im, $counter_params['hits_font_size'], 0, 72, 10, $color_daily_visitors, $counter_params['font_path'], $all_visitors);
+				imagettftext($src_im, $counter_params['hits_font_size'], 0, 72, 17, $color_daily_visitors, $counter_params['font_path'], $all_visitors);
 
 				// Draw monthly visitors
 				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
 				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
-		 		imagettftext($src_im, $counter_params['hits_font_size'], 0, 72, 24, $color_daily_visitors, $counter_params['font_path'], $monthly_visitors);
+		 		imagettftext($src_im, $counter_params['hits_font_size'], 0, 72, 31, $color_daily_visitors, $counter_params['font_path'], $monthly_visitors);
 				
 				// Draw daily visitors
 				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
 				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
-				imagettftext($src_im, $counter_params['hits_font_size'], 0, 72, 38, $color_daily_visitors, $counter_params['font_path'], $daily_visitors);
+				imagettftext($src_im, $counter_params['hits_font_size'], 0, 72, 45, $color_daily_visitors, $counter_params['font_path'], $daily_visitors);
 
 
 				# // Draw visits
@@ -435,17 +435,17 @@ class API extends \Piwik\Plugin\API {
 				// Draw total visitors
 				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
 				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
-				imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 5, $color_daily_visitors, $counter_params['font_path'], $all_visitors);
+				imagettftext($src_im, $counter_params['hits_font_size'], 0, 72, 5, $color_daily_visitors, $counter_params['font_path'], $all_visitors);
 
 				// Draw monthly visitors
 				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
 				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
-		 		imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 15, $color_daily_visitors, $counter_params['font_path'], $monthly_visitors);
+		 		imagettftext($src_im, $counter_params['hits_font_size'], 0, 72, 15, $color_daily_visitors, $counter_params['font_path'], $monthly_visitors);
 				
 				// Draw daily visitors
 				$rgb_array_daily_visitors = $this->rgb2array($counter_params['color_visits']);
 				$color_daily_visitors = imagecolorallocate($src_im, $rgb_array_daily_visitors['r'], $rgb_array_daily_visitors['g'], $rgb_array_daily_visitors['b']);
-				imagettftext($src_im, $counter_params['hits_font_size'], 0, 10, 25, $color_daily_visitors, $counter_params['font_path'], $daily_visitors);
+				imagettftext($src_im, $counter_params['hits_font_size'], 0, 72, 25, $color_daily_visitors, $counter_params['font_path'], $daily_visitors);
 
 				# // Draw visits
 				# if ($counter_params['show_visits'] == 1) {
